@@ -1,0 +1,20 @@
+# Core dependencies
+beautifulsoup4>=4.10.0  # HTML parsing for doc_parser.py
+langchain>=0.1.0       # AI framework integration
+numpy>=1.24.0         # Vector operations for conflict_detector.py
+openai>=1.0.0         # GPT and Embedding API
+pandas>=1.4.0         # Data manipulation
+python-dotenv>=1.0.0  # Environment variable management
+python-telegram-bot>=20.0  # Telegram bot interface
+PyYAML>=6.0           # YAML config parsing for tagger.py
+qdrant-client>=1.3.0  # Vector database client
+requests>=2.25.1      # HTTP client for API calls
+scikit-learn>=1.0.0   # For KMeans clustering
+tqdm>=4.64.0          # Progress bars
+anthropic>=0.18.0     # Anthropic Claude API
+
+# Optional dependencies
+pytest>=7.0.0         # For unit testing
+black>=23.0.0         # Code formatting
+flake8>=6.0.0         # Code linting
+
