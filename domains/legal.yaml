@@ -1,0 +1,42 @@
+# 法律领域配置示例
+
+name: "legal"
+description: "法律咨询领域"
+
+# LLM相关配置
+llm:
+  preferred_provider: "openai"
+  model_params:
+    temperature: 0.2
+    top_p: 0.9
+
+# 提示词模板
+prompt_template: |
+  你是一名专业的法律顾问助手，请根据以下相关法律资料回答用户的问题。
+
+  【相关法律资料】
+  {context}
+
+  【用户提问】
+  {query}
+
+  请用准确、专业的法律术语回答，引用相关法条。如果信息不足以提供法律建议，请明确说明并建议咨询专业律师。
+
+# 向量集合名称
+vector_collection: "legal_docs"
+
+# 领域标签
+tags:
+  - "合同"
+  - "诉讼"
+  - "法规"
+  - "知识产权"
+  - "民法"
+  - "刑法"
+  - "行政法"
+
+# 评估指标
+evaluation_metrics:
+  accuracy: 0.9  # 准确率权重
+  citation: 0.8  # 引用率权重
+  completeness: 0.7  # 完整性权重

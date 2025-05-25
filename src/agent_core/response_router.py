@@ -21,6 +21,12 @@ from agent_core.prompt_builder import build_prompt
 from llm.factory import LLMFactory
 from knowledge_ingestion.qa_logger import log_qa_to_knowledge_base
 from agent_core.canonical_router import transform_query_to_canonical_form
+from config.domain_manager import domain_manager
+from config.env_manager import init_config
+
+# 获取系统配置
+config = init_config()
+default_domain = config['domains']['default_domain']
 
 # 获取LLM实例
 llm = LLMFactory.get_llm()
@@ -55,26 +61,50 @@ def find_similar_canonical_query(query: str, threshold: float = 0.8):
     )
     return results[0] if results else None
 
-def retrieve_relevant_documents(query: str, top_k: int = 3):
-    """从文档库中检索相关内容"""
+def retrieve_relevant_documents(query: str, domain: str = None, top_k: int = 3):
+    """从文档库中检索相关内容
+    
+    Args:
+        query: 用户查询
+        domain: 领域名称，用于确定使用哪个向量集合
+        top_k: 返回的最大结果数
+        
+    Returns:
+        list: 检索到的文档列表
+    """
     client = get_client()
+    
+    # 确定使用哪个集合
+    collection_name = DOCUMENT_COLLECTION
+    if domain:
+        # 获取领域特定的向量集合名称
+        domain_collection = domain_manager.get_domain_collection(domain)
+        if domain_collection:
+            collection_name = domain_collection
+    
+    # 执行向量搜索
     results = client.search(
-        collection_name=DOCUMENT_COLLECTION,
+        collection_name=collection_name,
         query_vector=get_embedding(query),
         limit=top_k
     )
     return results
 
-def generate_response(user_query: str, user_id: str = None) -> str:
+def generate_response(user_query: str, user_id: str = None, domain: str = None) -> str:
     """生成回答
     
     Args:
         user_query: 用户查询
         user_id: 用户ID（可选）
+        domain: 领域名称（可选），默认使用系统配置的默认领域
         
     Returns:
         str: 生成的回答
     """
+    # 使用指定领域或默认领域
+    if domain is None:
+        domain = default_domain
+    
     # 1. 获取对话上下文
     context = get_conversation_context(user_id) if user_id else []
     
@@ -87,20 +117,30 @@ def generate_response(user_query: str, user_id: str = None) -> str:
         return similar_query.payload["answer"]
     
     # 4. 使用规范化查询检索相关文档
-    relevant_docs = retrieve_relevant_documents(canonical_query)
+    relevant_docs = retrieve_relevant_documents(canonical_query, domain=domain)
     doc_contents = [doc.payload["content"] for doc in relevant_docs]
     
-    # 5. 构建 prompt
+    # 5. 构建 prompt，使用指定领域
     prompt = build_prompt(
         user_query,
-        context=context,
-        relevant_docs=doc_contents
+        doc_contents,
+        domain=domain
     )
     
-    # 6. 生成回答
-    response = llm.generate(prompt)
+    # 6. 获取领域特定的LLM配置
+    domain_llm_config = domain_manager.get_domain_llm_config(domain)
     
-    # 7. 记录到知识库
+    # 7. 生成回答
+    if domain_llm_config:
+        # 使用领域特定的LLM配置
+        provider = domain_llm_config.get('preferred_provider')
+        model_params = domain_llm_config.get('model_params', {})
+        response = llm.generate(prompt, provider=provider, **model_params)
+    else:
+        # 使用默认LLM配置
+        response = llm.generate(prompt)
+    
+    # 8. 记录到知识库
     log_qa_to_knowledge_base(user_query, response, user_id)
     
     return response
