@@ -9,14 +9,13 @@ import datetime
 import uuid
 import requests
 from vector_engine.embedding_router import get_embedding
-from vector_engine.qdrant_client import get_client
+from vector_engine.qdrant_client import get_client, CANONICAL_COLLECTION
 from config.env_manager import init_config
 from llm.factory import LLMFactory
 
 # 初始化配置
 config = init_config()
 QDRANT_URL = config['qdrant']['url']
-COLLECTION = "canonical_questions"  # 使用独立的集合存储规范化问题
 
 # 获取LLM实例
 llm = LLMFactory.get_llm()
@@ -30,7 +29,7 @@ def transform_query_to_canonical_form(user_query: str, threshold: float = 0.9) -
 
     # Step 2: search for similar canonical question
     hits = client.search(
-        collection_name=COLLECTION,
+        collection_name=CANONICAL_COLLECTION,
         query_vector=embedding,
         limit=1
     )
@@ -44,7 +43,7 @@ def transform_query_to_canonical_form(user_query: str, threshold: float = 0.9) -
 
     # Step 4: store canonical question for future reuse
     client.upsert(
-        collection_name=COLLECTION,
+        collection_name=CANONICAL_COLLECTION,
         points=[{
             "id": str(uuid.uuid4()),
             "vector": embedding,

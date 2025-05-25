@@ -1,0 +1,72 @@
+[
+  {
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/services/immigrate-canada.html",
+    "name": "IRCC_Immigrate",
+    "domain": "canada_immigration",
+    "lang": "en",
+    "description": "加拿大移民主页"
+  },
+  {
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/services/immigrate-canada/express-entry.html",
+    "name": "IRCC_ExpressEntry",
+    "domain": "canada_immigration",
+    "lang": "en",
+    "description": "快速通道移民系统"
+  },
+  {
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/services/study-canada.html",
+    "name": "IRCC_Study",
+    "domain": "canada_immigration",
+    "lang": "en",
+    "description": "加拿大学习许可"
+  },
+  {
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/services/work-canada.html",
+    "name": "IRCC_Work",
+    "domain": "canada_immigration",
+    "lang": "en",
+    "description": "加拿大工作许可"
+  },
+  {
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/services/canadian-citizenship.html",
+    "name": "IRCC_Citizenship",
+    "domain": "canada_immigration",
+    "lang": "en",
+    "description": "加拿大公民申请"
+  },
+  {
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/services/new-immigrants.html",
+    "name": "IRCC_NewImmigrants",
+    "domain": "canada_immigration",
+    "lang": "en",
+    "description": "新移民服务与资源"
+  },
+  {
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/services/immigrate-canada/provincial-nominees.html",
+    "name": "IRCC_PNP",
+    "domain": "canada_immigration",
+    "lang": "en",
+    "description": "省提名计划"
+  },
+  {
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/services/application.html",
+    "name": "IRCC_Applications",
+    "domain": "canada_immigration",
+    "lang": "en",
+    "description": "申请表格与流程"
+  },
+  {
+    "url": "https://www.canada.ca/fr/immigration-refugies-citoyennete/services/immigrer-canada.html",
+    "name": "IRCC_Immigrate_FR",
+    "domain": "canada_immigration",
+    "lang": "fr",
+    "description": "加拿大移民主页(法语)"
+  },
+  {
+    "url": "https://www.canada.ca/fr/immigration-refugies-citoyennete/services/etudier-canada.html",
+    "name": "IRCC_Study_FR",
+    "domain": "canada_immigration",
+    "lang": "fr",
+    "description": "加拿大学习许可(法语)"
+  }
+] 

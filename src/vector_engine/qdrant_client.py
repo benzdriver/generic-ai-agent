@@ -9,12 +9,12 @@ Qdrant客户端管理模块：统一管理Qdrant连接和集合
 """
 
 from qdrant_client import QdrantClient, models
-from config.env_manager import init_config
+from src.config.env_manager import init_config
 from typing import Optional
 import datetime
 
-# 初始化配置
-config = init_config()
+# 初始化配置，使用真实API密钥
+config = init_config(test_mode=False)
 qdrant_config = config['qdrant']
 
 def get_client() -> QdrantClient:

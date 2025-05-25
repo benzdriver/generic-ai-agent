@@ -12,14 +12,12 @@ from sklearn.cluster import KMeans
 from qdrant_client import QdrantClient
 from vector_engine.embedding_router import get_embedding
 from config.env_manager import init_config
-from vector_engine.qdrant_client import get_client
+from vector_engine.qdrant_client import get_client, DOCUMENT_COLLECTION, MERGED_COLLECTION
 from llm.factory import LLMFactory
 
 # 初始化配置
 config = init_config()
 QDRANT_URL = config['qdrant']['url']
-COLLECTION = config['qdrant']['collection']
-MERGED_COLLECTION = config['qdrant']['merged_collection']
 
 # 获取LLM实例
 llm = LLMFactory.get_llm()
@@ -29,7 +27,7 @@ def get_client() -> QdrantClient:
     return QdrantClient(url=QDRANT_URL)
 
 def fetch_qa_embeddings(limit=1000):
-    resp = requests.post(f"{QDRANT_URL}/collections/{COLLECTION}/points/scroll", json={
+    resp = requests.post(f"{QDRANT_URL}/collections/{DOCUMENT_COLLECTION}/points/scroll", json={
         "limit": limit,
         "with_payload": True,
         "with_vectors": True
@@ -107,7 +105,7 @@ def merge_similar_points(threshold: float = 0.95):
     
     # 获取所有向量
     points = client.scroll(
-        collection_name=COLLECTION,
+        collection_name=DOCUMENT_COLLECTION,
         limit=1000,
         with_payload=True,
         with_vectors=True

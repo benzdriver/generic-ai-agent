@@ -61,6 +61,14 @@ def get_knowledge_config() -> Dict[str, Any]:
         'tag_rule_dir': os.environ.get('TAG_RULE_DIR', 'tags')
     }
 
+# 领域配置
+def get_domains_config() -> Dict[str, Any]:
+    """获取领域相关配置"""
+    return {
+        'config_dir': os.environ.get('DOMAINS_CONFIG_DIR', 'domains'),
+        'default_domain': os.environ.get('DEFAULT_DOMAIN', 'immigration_consultant')
+    }
+
 # 日志配置
 def get_logging_config() -> Dict[str, str]:
     """获取日志相关配置"""
@@ -70,14 +78,20 @@ def get_logging_config() -> Dict[str, str]:
     }
 
 # 验证必需的环境变量
-def validate_required_env() -> None:
-    """验证必需的环境变量是否已设置"""
-    required_vars = [
-        'OPENAI_API_KEY',
-        'TELEGRAM_TOKEN'
-    ]
+def validate_required_env(test_mode: bool = False) -> None:
+    """验证必需的环境变量是否已设置
     
-    # 如果使用Qdrant Cloud，需要API Key
+    Args:
+        test_mode: 是否处于测试模式，测试模式下会放宽某些要求
+    """
+    required_vars = []
+    
+    # 在非测试模式下，需要API密钥
+    if not test_mode:
+        required_vars.append('OPENAI_API_KEY')
+        required_vars.append('TELEGRAM_TOKEN')
+    
+    # 如果使用Qdrant Cloud，需要API Key（即使在测试模式下）
     if os.environ.get('QDRANT_IS_CLOUD', 'false').lower() == 'true':
         required_vars.append('QDRANT_API_KEY')
     
@@ -86,10 +100,17 @@ def validate_required_env() -> None:
         raise ValueError(f"Missing required environment variables: {', '.join(missing_vars)}")
 
 # 初始化所有配置
-def init_config() -> Dict[str, Any]:
-    """初始化并返回所有配置"""
+def init_config(test_mode: bool = False) -> Dict[str, Any]:
+    """初始化并返回所有配置
+    
+    Args:
+        test_mode: 是否处于测试模式，测试模式下会放宽某些要求
+        
+    Returns:
+        Dict[str, Any]: 所有配置信息
+    """
     load_env()
-    validate_required_env()
+    validate_required_env(test_mode)
     
     return {
         'openai': get_openai_config(),
@@ -97,5 +118,6 @@ def init_config() -> Dict[str, Any]:
         'qdrant': get_qdrant_config(),
         'telegram': get_telegram_config(),
         'knowledge': get_knowledge_config(),
-        'logging': get_logging_config()
+        'logging': get_logging_config(),
+        'domains': get_domains_config()
     } 

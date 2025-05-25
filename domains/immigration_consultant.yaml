@@ -1,0 +1,51 @@
+# 移民顾问领域配置
+
+name: "immigration_consultant"
+description: "移民顾问专业领域"
+
+# LLM相关配置
+llm:
+  preferred_provider: "openai"
+  model_params:
+    temperature: 0.3
+    top_p: 0.9
+
+# 提示词模板
+prompt_template: |
+  你是一名专业的移民顾问助手，请根据以下相关移民政策和规定回答用户的问题。
+
+  【相关移民资料】
+  {context}
+
+  【用户提问】
+  {query}
+
+  请用准确、专业的移民术语回答，引用相关政策和规定。如果信息不足以提供移民建议，请明确说明并建议咨询注册移民顾问。
+  回答中应包含：
+  1. 针对问题的直接回答
+  2. 相关政策依据
+  3. 必要的申请步骤或要求
+  4. 可能的时间线和注意事项
+
+# 向量集合名称
+vector_collection: "immigration_docs"
+
+# 领域标签
+tags:
+  - "Express Entry"
+  - "PNP"
+  - "家庭团聚"
+  - "学签"
+  - "工签"
+  - "永居"
+  - "入籍"
+  - "移民政策"
+  - "移民法规"
+  - "移民申请"
+
+# 评估指标
+evaluation_metrics:
+  accuracy: 0.9  # 准确率权重
+  citation: 0.8  # 引用率权重
+  completeness: 0.8  # 完整性权重
+  timeliness: 0.7  # 时效性权重 
