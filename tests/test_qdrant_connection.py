@@ -31,7 +31,9 @@ def main():
     
     # 从环境变量获取URL和API密钥
     url = os.environ.get('QDRANT_URL', 'https://23b33ab7-02d1-4a51-b52a-967c3c5d7e0c.us-west-1-0.aws.cloud.qdrant.io:6333')
-    api_key = os.environ.get('QDRANT_API_KEY', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3MiOiJtIn0.ErhUqQTU')
+    api_key = os.environ.get('QDRANT_API_KEY')
+    if not api_key:
+        raise ValueError("QDRANT_API_KEY environment variable not set.")
     
     print(f"\n连接到Qdrant: {url}")
     print("使用API密钥进行认证...")

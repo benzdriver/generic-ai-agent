@@ -5,7 +5,10 @@ TTL清理器：负责清理过期的知识点
 """
 
 from datetime import datetime, timedelta
-from vector_engine.qdrant_client import get_client, COLLECTION_NAME
+from vector_engine.qdrant_client import (
+    get_client,
+    DOCUMENT_COLLECTION,
+)
 from config.env_manager import init_config
 
 # 初始化配置
@@ -19,7 +22,7 @@ def clean_expired_points():
     
     # 删除过期的点
     client.delete(
-        collection_name=COLLECTION_NAME,
+        collection_name=DOCUMENT_COLLECTION,
         filter={
             "must": [
                 {

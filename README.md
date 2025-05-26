@@ -44,7 +44,7 @@ A modular, self-evolving, embedding-based intelligent assistant for answering im
 - `cluster_merger.py`：定期用 KMeans 聚类相似问答并用 GPT 合并为精简条目。
 - `delete_old_points.py`：清理合并后的原始问答片段。
 
-### 6. `scripts/`
+### 6. `src/scripts/`
 脚本集：
 - `load_and_index.py`：将 IRCC 政策文档导入知识库。
 - `weekly_cleanup.py`：批量执行合并 + 清理流程。
@@ -78,7 +78,7 @@ TAG_RULE_DIR=tags
 python main.py
 
 # 导入 IRCC 政策文档
-python scripts/load_and_index.py data/ircc_news.html html
+python src/scripts/load_and_index.py data/ircc_news.html html
 
 # 每周知识整理（可加 crontab）
 bash run_weekly_cleanup.sh

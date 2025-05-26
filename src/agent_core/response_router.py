@@ -114,9 +114,9 @@ def generate_response(user_query: str, user_id: str = None, domain: str = None) 
     # 3. 使用规范化查询搜索相似问题
     similar_query = find_similar_canonical_query(canonical_query)
     if similar_query and similar_query.score > 0.9:
-        answer = (similar_query.payload or {}).get("answer")
-        if answer:
-            return answer
+        payload = getattr(similar_query, "payload", None)
+        if isinstance(payload, dict) and "answer" in payload:
+            return payload["answer"]
     
     # 4. 使用规范化查询检索相关文档
     relevant_docs = retrieve_relevant_documents(canonical_query, domain=domain)
