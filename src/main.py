@@ -3,6 +3,7 @@
 """
 
 import logging
+import os
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes, MessageHandler, filters
 from config.env_manager import init_config
@@ -11,12 +12,16 @@ from agent_core.response_router import generate_response
 # 初始化配置
 config = init_config()
 
-# 设置日志
+# 设置日志目录并初始化日志配置
+log_dir = config['logging'].get('dir')
+if log_dir:
+    os.makedirs(log_dir, exist_ok=True)
+
 logging.basicConfig(
     level=config['logging']['level'],
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     handlers=[
-        logging.FileHandler(f"{config['logging']['dir']}/app.log"),
+        logging.FileHandler(f"{log_dir}/app.log"),
         logging.StreamHandler()
     ]
 )
