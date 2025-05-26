@@ -132,7 +132,7 @@ def merge_similar_points(threshold: float = 0.95):
             merged_vector = sum([vectors[j] for j in cluster_indices]) / len(cluster_indices)
             merged_payload = {
                 "texts": [payloads[j]["text"] for j in cluster_indices],
-                "merged_at": datetime.utcnow().isoformat(),
+                "merged_at": datetime.datetime.utcnow().isoformat(),
                 "source_ids": [str(points[j].id) for j in cluster_indices]
             }
             merged_points.append((merged_vector, merged_payload))
