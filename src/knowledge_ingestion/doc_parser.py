@@ -5,9 +5,21 @@ import re
 from bs4 import BeautifulSoup
 import uuid
 import datetime
-from typing import Dict, Any
+from typing import Dict, Any, List
 from vector_engine.embedding_router import get_embedding
 from vector_engine.qdrant_client import DOCUMENT_COLLECTION, get_client
+
+
+def parse_html_content(html_text: str) -> List[str]:
+    """Parse HTML text and return meaningful text blocks.
+
+    This mirrors ``parse_ircc_html`` but works directly with HTML
+    strings rather than reading from disk.
+    """
+    soup = BeautifulSoup(html_text, 'html.parser')
+    raw_text = soup.get_text(separator="\n")
+    paragraphs = [p.strip() for p in raw_text.split("\n") if len(p.strip()) > 40]
+    return paragraphs
 
 
 def parse_ircc_html(file_path: str) -> list:
@@ -15,11 +27,9 @@ def parse_ircc_html(file_path: str) -> list:
     将 IRCC 政策 HTML 页面解析为段落列表（每段可供嵌入）
     """
     with open(file_path, 'r', encoding='utf-8') as f:
-        soup = BeautifulSoup(f, 'html.parser')
+        html_text = f.read()
 
-    raw_text = soup.get_text(separator="\n")
-    paragraphs = [p.strip() for p in raw_text.split("\n") if len(p.strip()) > 40]
-    return paragraphs
+    return parse_html_content(html_text)
 
 
 def parse_ircc_text(file_path: str) -> list:
