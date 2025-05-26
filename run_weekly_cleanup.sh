@@ -12,6 +12,6 @@ echo "[START] $(date) 每周知识合并清理开始..."
 cd "$(dirname "$0")"
 
 # 执行 Python 合并与清理脚本
-python3 scripts/weekly_cleanup.py
+python3 src/scripts/weekly_cleanup.py
 
 echo "[FINISH] $(date) 完成。日志已记录。"
