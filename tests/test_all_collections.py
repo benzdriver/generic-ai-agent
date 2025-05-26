@@ -76,14 +76,16 @@ class TestAllCollections(unittest.TestCase):
             # 规范化查询集合测试数据
             cls.canonical_test_data = [
                 (np.random.rand(1536).tolist(), {
-                    "raw": "怎么申请加拿大移民?",
-                    "canonical": "加拿大移民申请流程",
+                    "original_question": "怎么申请加拿大移民?",
+                    "canonical_form": "加拿大移民申请流程",
+                    "answer": "示例回答1",
                     "created_at": cls.now,
                     "test_id": "canonical_test_1"
                 }),
                 (np.random.rand(1536).tolist(), {
-                    "raw": "学生签证需要什么材料?",
-                    "canonical": "加拿大学生签证申请材料清单",
+                    "original_question": "学生签证需要什么材料?",
+                    "canonical_form": "加拿大学生签证申请材料清单",
+                    "answer": "示例回答2",
                     "created_at": cls.now,
                     "test_id": "canonical_test_2"
                 })

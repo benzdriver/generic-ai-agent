@@ -10,6 +10,7 @@
 """
 import uuid
 import datetime
+from typing import Optional
 from vector_engine.embedding_router import get_embedding
 from vector_engine.qdrant_client import (
     CANONICAL_COLLECTION,
@@ -38,7 +39,7 @@ def log_conversation(user_id: str, question: str, answer: str):
     )
     print(f"✅ 对话已记录到历史")
 
-def log_canonical_query(question: str, canonical_form: str, answer: str):
+def log_canonical_query(question: str, canonical_form: str, answer: Optional[str] = None):
     """记录标准化查询"""
     client = get_client()
     canonical_point = {
