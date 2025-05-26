@@ -4,10 +4,8 @@
 规范化路由器：负责将用户问题转换为标准形式
 """
 
-import os
 import datetime
 import uuid
-import requests
 from vector_engine.embedding_router import get_embedding
 from vector_engine.qdrant_client import get_client, CANONICAL_COLLECTION
 from config.env_manager import init_config
@@ -15,7 +13,6 @@ from llm.factory import LLMFactory
 
 # 初始化配置
 config = init_config()
-QDRANT_URL = config['qdrant']['url']
 
 # 获取LLM实例
 llm = LLMFactory.get_llm()
@@ -35,11 +32,12 @@ def transform_query_to_canonical_form(user_query: str, threshold: float = 0.9) -
     )
 
     if hits and hits[0].score >= threshold:
-        return hits[0].payload["canonical"]
+        payload = hits[0].payload or {}
+        return payload.get("canonical_form") or payload.get("canonical")
 
     # Step 3: fallback to LLM to normalize
     prompt = f"请将以下用户问题改写为标准化移民术语表达，用于统一检索：\n\n用户问题：{user_query}"
-    canonical = llm.generate(prompt)
+    canonical_form = llm.generate(prompt)
 
     # Step 4: store canonical question for future reuse
     client.upsert(
@@ -48,11 +46,12 @@ def transform_query_to_canonical_form(user_query: str, threshold: float = 0.9) -
             "id": str(uuid.uuid4()),
             "vector": embedding,
             "payload": {
-                "raw": user_query,
-                "canonical": canonical,
+                "original_question": user_query,
+                "canonical_form": canonical_form,
+                "answer": None,
                 "created_at": datetime.datetime.utcnow().isoformat()
             }
         }]
     )
-    
-    return canonical.strip()
+
+    return canonical_form.strip()
