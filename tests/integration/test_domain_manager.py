@@ -11,9 +11,18 @@ import unittest
 import uuid
 from pathlib import Path
 
+# provide required environment variables before importing project modules
+os.environ.setdefault("OPENAI_API_KEY", "test")
+os.environ.setdefault("TELEGRAM_TOKEN", "test")
+os.environ.setdefault("QDRANT_API_KEY", "test")
+os.environ.setdefault("QDRANT_IS_CLOUD", "false")
+
 # 添加项目根目录到Python路径
 project_root = Path(__file__).parent.parent.parent
-sys.path.append(str(project_root))
+src_path = project_root / "src"
+for p in (project_root, src_path):
+    if str(p) not in sys.path:
+        sys.path.insert(0, str(p))
 
 from src.config.env_manager import init_config
 from src.config.domain_manager import domain_manager
@@ -26,7 +35,6 @@ class TestDomainManager(unittest.TestCase):
     def setUpClass(cls):
         """测试类初始化"""
         print("\n准备领域管理器测试环境...")
-        # 初始化配置，使用真实API
         cls.config = init_config(test_mode=False)
         # 测试领域名称（用于临时测试）
         cls.test_domain = f"test_domain_{uuid.uuid4().hex[:8]}"
