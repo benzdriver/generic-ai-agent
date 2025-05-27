@@ -11,9 +11,18 @@ import unittest
 import uuid
 from pathlib import Path
 
+# default environment variables required for configuration
+os.environ.setdefault("OPENAI_API_KEY", "test")
+os.environ.setdefault("TELEGRAM_TOKEN", "test")
+os.environ.setdefault("QDRANT_API_KEY", "test")
+os.environ.setdefault("QDRANT_IS_CLOUD", "false")
+
 # 添加项目根目录到Python路径
 project_root = Path(__file__).parent.parent.parent
-sys.path.append(str(project_root))
+src_path = project_root / "src"
+for p in (project_root, src_path):
+    if str(p) not in sys.path:
+        sys.path.insert(0, str(p))
 
 from src.config.env_manager import init_config
 from src.vector_engine.qdrant_client import (

@@ -9,10 +9,22 @@ import sys
 import os
 import unittest
 from pathlib import Path
+import pytest
+
+# set required environment variables for configuration
+os.environ.setdefault("OPENAI_API_KEY", "test")
+os.environ.setdefault("TELEGRAM_TOKEN", "test")
+os.environ.setdefault("QDRANT_API_KEY", "test")
+os.environ.setdefault("QDRANT_IS_CLOUD", "false")
 
 # 添加项目根目录到Python路径
 project_root = Path(__file__).parent.parent.parent
-sys.path.append(str(project_root))
+src_path = project_root / "src"
+for p in (project_root, src_path):
+    if str(p) not in sys.path:
+        sys.path.insert(0, str(p))
+
+pytest.importorskip("langchain_community", reason="langchain_community not installed")
 
 from src.config.env_manager import init_config
 from src.config.domain_manager import domain_manager
@@ -20,7 +32,6 @@ from src.llm.factory import LLMFactory
 from src.vector_engine.embedding_router import get_embedding
 from src.agent_core.response_router import generate_response
 from src.vector_engine.qdrant_client import init_collections, get_client
-
 class TestLLMIntegration(unittest.TestCase):
     """测试LLM与其他组件的集成"""
     
