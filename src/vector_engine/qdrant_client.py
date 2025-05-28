@@ -32,10 +32,16 @@ def get_client() -> QdrantClient:
             url=qdrant_config['url'],
             api_key=qdrant_config['api_key'],
             prefer_grpc=False,
-            timeout=30.0,  # 增加超时时间
-            check_compatibility=False  # 跳过版本兼容性检查
+            timeout=60.0,  # 增加超时时间
+            check_compatibility=False,  # 跳过版本兼容性检查
+            https=True  # 确保使用HTTPS连接
         )
-    return QdrantClient(url=qdrant_config['url'], prefer_grpc=False)
+    return QdrantClient(
+        url=qdrant_config['url'], 
+        prefer_grpc=False,
+        timeout=60.0,
+        check_compatibility=False
+    )
 
 CANONICAL_COLLECTION = "canonical_queries"  # 规范化查询集合
 CONVERSATION_COLLECTION = "conversations"   # 对话历史集合
@@ -79,7 +85,7 @@ def init_collections(vector_size: int = 1536):
                     client.create_payload_index(
                         collection_name=name,
                         field_name="created_at",
-                        field_schema=models.PayloadSchemaType.FLOAT
+                        field_schema="float"  # 使用字符串而不是枚举
                     )
                     print(f"✅ 为集合 {name} 创建 created_at 索引成功")
                 except Exception as e:
@@ -91,7 +97,7 @@ def init_collections(vector_size: int = 1536):
                     client.create_payload_index(
                         collection_name=name,
                         field_name="status",
-                        field_schema=models.PayloadSchemaType.KEYWORD
+                        field_schema="keyword"  # 使用字符串而不是枚举
                     )
                     print(f"✅ 为集合 {name} 创建 status 索引成功")
                 except Exception as e:
@@ -131,4 +137,4 @@ def get_collection_info(collection_name: Optional[str] = None) -> Dict[str, Any]
         except Exception as e:
             collections[name] = {"error": str(e)}
     
-    return collections              
+    return collections                  
