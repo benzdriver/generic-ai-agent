@@ -5,8 +5,9 @@
 """
 
 from typing import List, Dict, Any, Optional
-from vector_engine.embedding_router import get_embedding
-from vector_engine.qdrant_client import get_client, DOCUMENT_COLLECTION
+from src.vector_engine.embedding_router import get_embedding
+from src.vector_engine.qdrant_client import get_client, DOCUMENT_COLLECTION
+from qdrant_client.http import models
 
 # 领域特定的集合映射
 DOMAIN_COLLECTIONS = {
@@ -39,16 +40,15 @@ def retrieve_relevant_chunks(query: str, limit: int = 5, domain: str = "default"
     # 构建过滤条件
     filter_condition = None
     if filter_tags:
-        filter_condition = {
-            "must": [
-                {
-                    "key": "tags",
-                    "match": {
-                        "any": filter_tags
-                    }
-                }
-            ]
-        }
+        tags_condition = models.FieldCondition(
+            key="tags",
+            match=models.MatchAny(
+                any=filter_tags
+            )
+        )
+        filter_condition = models.Filter(
+            must=[tags_condition]
+        )
     
     # 执行检索
     results = client.search(
