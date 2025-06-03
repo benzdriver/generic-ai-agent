@@ -35,9 +35,17 @@ def get_anthropic_config() -> Dict[str, str]:
         'model': os.environ.get('ANTHROPIC_MODEL', 'claude-3-5-sonnet-latest')
     }
 
-# Qdrant 配置
+def get_weaviate_config() -> Dict[str, Any]:
+    """获取 Weaviate 相关配置 (doji_memory backend)"""
+    return {
+        'url': os.environ.get('WEAVIATE_URL', 'http://localhost:8080'),
+        'api_key': os.environ.get('WEAVIATE_API_KEY'),
+        'is_cloud': os.environ.get('WEAVIATE_IS_CLOUD', 'false').lower() == 'true'
+    }
+
+# Qdrant 配置 (保持向后兼容)
 def get_qdrant_config() -> Dict[str, Any]:
-    """获取 Qdrant 相关配置"""
+    """获取 Qdrant 相关配置 (已弃用，保持向后兼容)"""
     return {
         'url': os.environ.get('QDRANT_URL', 'http://localhost:6333'),
         'api_key': os.environ.get('QDRANT_API_KEY'),
@@ -115,9 +123,10 @@ def init_config(test_mode: bool = False) -> Dict[str, Any]:
     return {
         'openai': get_openai_config(),
         'anthropic': get_anthropic_config(),
-        'qdrant': get_qdrant_config(),
+        'weaviate': get_weaviate_config(),
+        'qdrant': get_qdrant_config(),  # 保持向后兼容
         'telegram': get_telegram_config(),
         'knowledge': get_knowledge_config(),
         'logging': get_logging_config(),
         'domains': get_domains_config()
-    } 
+    }   

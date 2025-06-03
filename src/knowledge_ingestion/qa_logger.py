@@ -12,7 +12,7 @@ import uuid
 import datetime
 from typing import Optional
 from vector_engine.embedding_router import get_embedding
-from vector_engine.qdrant_client import (
+from src.vector_engine.doji_memory_client import (
     CANONICAL_COLLECTION,
     CONVERSATION_COLLECTION,
     get_client

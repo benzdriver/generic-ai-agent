@@ -57,11 +57,11 @@ These scripts integrate with the application's core modules:
 These scripts require:
 - All core application modules to be properly installed
 - Proper environment configuration (see project root README)
-- Appropriate permissions for the vector database
+- Appropriate permissions for the doji_memory vector database (Weaviate backend)
 - Additional libraries: `requests`, `beautifulsoup4`, `schedule` (for crawling and scheduling)
 
 ## Configuration Files
 
 - `data/immigration_sites.json`: Contains the list of immigration websites to crawl
 
-For system setup and configuration scripts, see the `/scripts` directory. 
+For system setup and configuration scripts, see the `/scripts` directory.  

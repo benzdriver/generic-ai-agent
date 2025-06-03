@@ -24,9 +24,8 @@ sys.path.append(str(project_root))
 try:
     from knowledge_ingestion.doc_parser import parse_html_content
     from vector_engine.embedding_router import get_embedding
-    from qdrant_client import QdrantClient
-    from config.env_manager import init_config
-    from vector_engine.qdrant_client import DOCUMENT_COLLECTION
+    from src.config.env_manager import init_config
+    from src.vector_engine.doji_memory_client import DOCUMENT_COLLECTION, get_client
 except ImportError as e:
     print(f"导入项目模块失败: {str(e)}")
     print("请确保您在正确的环境中运行此脚本")
@@ -52,7 +51,6 @@ CACHE_DIR.mkdir(parents=True, exist_ok=True)
 
 # 初始化配置
 config = init_config()
-qdrant_config = config['qdrant']
 
 # 默认爬取的移民官方网站列表
 DEFAULT_SITES = [
@@ -76,14 +74,10 @@ DEFAULT_SITES = [
     }
 ]
 
-def get_client() -> QdrantClient:
-    """获取Qdrant客户端"""
-    if qdrant_config['is_cloud']:
-        return QdrantClient(
-            url=qdrant_config['url'],
-            api_key=qdrant_config['api_key']
-        )
-    return QdrantClient(url=qdrant_config['url'])
+def get_client():
+    """获取doji_memory客户端（兼容接口）"""
+    from src.vector_engine.doji_memory_client import get_client as get_doji_client
+    return get_doji_client()
 
 def upsert_documents_to_collection(paragraphs: list, metadata: dict = None):
     """上传文档到指定的向量数据库集合"""
@@ -228,4 +222,4 @@ def main():
     print(f"\n✅ 爬取完成。成功处理了 {success_count}/{len(sites)} 个网站")
 
 if __name__ == "__main__":
-    main() 
+    main()    

@@ -5,7 +5,7 @@
 """
 
 import openai
-from config.env_manager import init_config
+from src.config.env_manager import init_config
 
 # 初始化配置
 config = init_config()
