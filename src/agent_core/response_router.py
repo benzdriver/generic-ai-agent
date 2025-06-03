@@ -9,8 +9,7 @@
 - 支持对话历史和查询复用
 """
 
-from qdrant_client import models
-from vector_engine.qdrant_client import (
+from src.vector_engine.doji_memory_client import (
     CANONICAL_COLLECTION,
     CONVERSATION_COLLECTION,
     DOCUMENT_COLLECTION,

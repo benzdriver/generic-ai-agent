@@ -7,7 +7,7 @@ import uuid
 import datetime
 from typing import Dict, Any, List
 from vector_engine.embedding_router import get_embedding
-from vector_engine.qdrant_client import DOCUMENT_COLLECTION, get_client
+from src.vector_engine.doji_memory_client import DOCUMENT_COLLECTION, get_client
 
 
 def parse_html_content(html_text: str) -> List[str]:

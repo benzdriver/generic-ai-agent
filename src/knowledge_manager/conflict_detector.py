@@ -14,7 +14,7 @@ import datetime
 from typing import List, Dict, Tuple
 import numpy as np
 from vector_engine.embedding_router import get_embedding
-from vector_engine.qdrant_client import get_client, DOCUMENT_COLLECTION
+from src.vector_engine.doji_memory_client import get_client, DOCUMENT_COLLECTION
 from config.env_manager import init_config
 from llm.factory import LLMFactory
 
@@ -230,4 +230,4 @@ if __name__ == "__main__":
         
         resolve_conflicts(conflicts)
     else:
-        print("✅ 未发现冲突") 
+        print("✅ 未发现冲突")  

@@ -5,8 +5,8 @@
 """
 
 from typing import List, Dict, Any, Optional
-from vector_engine.embedding_router import get_embedding
-from vector_engine.qdrant_client import get_client, DOCUMENT_COLLECTION
+from src.vector_engine.embedding_router import get_embedding
+from src.vector_engine.doji_memory_client import get_client, DOCUMENT_COLLECTION
 
 # 领域特定的集合映射
 DOMAIN_COLLECTIONS = {

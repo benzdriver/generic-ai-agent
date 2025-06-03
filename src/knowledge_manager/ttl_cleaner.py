@@ -5,13 +5,12 @@ TTL清理器：负责清理过期的知识点
 """
 
 from datetime import datetime, timedelta
-from src.vector_engine.qdrant_client import (
+from src.vector_engine.doji_memory_client import (
     get_client,
     DOCUMENT_COLLECTION,
     init_collections
 )
 from src.config.env_manager import init_config
-from qdrant_client.http import models
 
 # 初始化配置
 config = init_config()

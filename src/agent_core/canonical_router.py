@@ -6,9 +6,9 @@
 
 import datetime
 import uuid
-from vector_engine.embedding_router import get_embedding
-from vector_engine.qdrant_client import get_client, CANONICAL_COLLECTION
-from config.env_manager import init_config
+from src.vector_engine.embedding_router import get_embedding
+from src.vector_engine.doji_memory_client import get_client, CANONICAL_COLLECTION
+from src.config.env_manager import init_config
 from llm.factory import LLMFactory
 
 # 初始化配置

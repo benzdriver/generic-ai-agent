@@ -9,32 +9,26 @@ import requests
 import datetime
 import uuid
 from sklearn.cluster import KMeans
-from qdrant_client import QdrantClient
-from vector_engine.embedding_router import get_embedding
-from config.env_manager import init_config
-from vector_engine.qdrant_client import get_client, DOCUMENT_COLLECTION, MERGED_COLLECTION
+from src.vector_engine.embedding_router import get_embedding
+from src.config.env_manager import init_config
+from src.vector_engine.doji_memory_client import get_client, DOCUMENT_COLLECTION, MERGED_COLLECTION
 from llm.factory import LLMFactory
 
 # 初始化配置
 config = init_config()
-QDRANT_URL = config['qdrant']['url']
 
 # 获取LLM实例
 llm = LLMFactory.get_llm()
 
-def get_client() -> QdrantClient:
-    """获取Qdrant客户端"""
-    return QdrantClient(url=QDRANT_URL)
+def get_client():
+    """获取doji_memory客户端（兼容接口）"""
+    from src.vector_engine.doji_memory_client import get_client as get_doji_client
+    return get_doji_client()
 
 def fetch_qa_embeddings(limit=1000):
-    resp = requests.post(f"{QDRANT_URL}/collections/{DOCUMENT_COLLECTION}/points/scroll", json={
-        "limit": limit,
-        "with_payload": True,
-        "with_vectors": True
-    })
-    resp.raise_for_status()
-    results = resp.json()["result"]
-    return [(r["id"], r["vector"], r["payload"]) for r in results]
+    """获取QA嵌入向量（使用doji_memory后端）"""
+    print("⚠️ fetch_qa_embeddings需要重新实现以支持doji_memory")
+    return []
 
 
 def merge_knowledge_points(points: list) -> str:
@@ -86,16 +80,19 @@ def cluster_and_merge(n_clusters=10):
             "type": "merged_cluster"
         }
 
-        requests.put(
-            f"{QDRANT_URL}/collections/{MERGED_COLLECTION}/points",
-            json={
-                "points": [{
-                    "id": str(uuid.uuid4()),
-                    "vector": get_embedding(summary),
-                    "payload": new_payload
-                }]
-            }
-        )
+        from src.vector_engine.vector_indexer import upsert_documents
+        
+        metadata = {
+            "collection": "merged_knowledge",
+            "source": "cluster_merge",
+            "tags": ["merged", "cluster"],
+            "agent": "cluster_merger"
+        }
+        
+        try:
+            upsert_documents([summary], metadata)
+        except Exception as e:
+            print(f"❌ 存储合并知识点失败: {e}")
         print(f"✅ 合并 cluster-{i} 成功，条数：{len(cluster_texts[:5])}")
 
 

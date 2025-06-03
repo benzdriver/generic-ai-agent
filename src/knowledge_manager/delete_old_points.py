@@ -4,8 +4,7 @@
 旧点删除器：负责删除过期或废弃的向量点
 """
 
-from qdrant_client.http import models
-from src.vector_engine.qdrant_client import (
+from src.vector_engine.doji_memory_client import (
     get_client, 
     DOCUMENT_COLLECTION,
     MERGED_COLLECTION,

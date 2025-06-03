@@ -1,6 +1,6 @@
 # 🧠 Smart Assistant (Immigration QA System)
 
-A modular, self-evolving, embedding-based intelligent assistant for answering immigration-related questions. Built with OpenAI, Qdrant, and Telegram interface, and designed to support future multi-domain, multi-channel deployment.
+A modular, self-evolving, embedding-based intelligent assistant for answering immigration-related questions. Built with OpenAI, doji_memory (Weaviate backend), and Telegram interface, and designed to support future multi-domain, multi-channel deployment.
 
 ---
 
@@ -29,9 +29,10 @@ A modular, self-evolving, embedding-based intelligent assistant for answering im
 ### 3. `vector_engine/`
 向量操作模块：
 - `embedding_router.py`：生成 OpenAI embedding 向量。
-- `vector_indexer.py`：将文本和 metadata 写入 Qdrant。
-- `retriever.py`：从 Qdrant 中检索相似知识片段，默认先语义规范化。
-- `qdrant_client.py`：Qdrant 客户端封装，支持自动创建集合和错误处理。
+- `vector_indexer.py`：将文本和 metadata 写入 doji_memory (Weaviate backend)。
+- `retriever.py`：从 doji_memory 中检索相似知识片段，默认先语义规范化。
+- `doji_memory_client.py`：doji_memory 客户端封装，支持自动创建集合和错误处理。
+- `doji_retriever.py`：基于 doji_memory 的检索器实现。
 
 ### 4. `knowledge_ingestion/`
 知识接入与处理：
@@ -63,9 +64,9 @@ OPENAI_API_KEY=your-openai-key
 TELEGRAM_TOKEN=your-telegram-token
 OPENAI_MODEL=gpt-4o
 EMBEDDING_MODEL=text-embedding-3-small
-QDRANT_URL=http://localhost:6333
-QDRANT_IS_CLOUD=false  # 设置为 true 使用云服务
-QDRANT_API_KEY=your-qdrant-api-key  # 云服务需要
+WEAVIATE_URL=http://localhost:8080
+WEAVIATE_IS_CLOUD=false  # 设置为 true 使用云服务
+WEAVIATE_API_KEY=your-weaviate-api-key  # 云服务需要
 TTL_DAYS=180
 TAG_RULE_DIR=tags
 ```
@@ -101,10 +102,10 @@ OPENAI_API_KEY=your-openai-key
 # Telegram Bot Token（必需）
 TELEGRAM_TOKEN=your-telegram-token
 
-# Qdrant 配置（必需）
-QDRANT_URL=https://your-qdrant-instance.com
-QDRANT_API_KEY=your-qdrant-api-key
-QDRANT_IS_CLOUD=true  # 设置为 false 使用本地 Qdrant
+# Weaviate 配置（必需，doji_memory backend）
+WEAVIATE_URL=https://your-weaviate-instance.com
+WEAVIATE_API_KEY=your-weaviate-api-key
+WEAVIATE_IS_CLOUD=true  # 设置为 false 使用本地 Weaviate
 
 # Anthropic API密钥（可选）
 ANTHROPIC_API_KEY=your-anthropic-key
@@ -151,19 +152,19 @@ python tests/run_tests.py tests/test_api_keys.py
 如果测试失败，请检查以下常见问题：
 
 1. **API密钥问题**：确保所有必需的API密钥都有效且正确设置
-2. **Qdrant连接问题**：
-   - 检查 `QDRANT_URL` 和 `QDRANT_API_KEY` 是否正确
-   - 如果使用云服务，确保 `QDRANT_IS_CLOUD=true`
-   - 如果使用本地服务，确保 Qdrant 服务已启动
-3. **Qdrant索引权限问题**：
+2. **Weaviate连接问题**：
+   - 检查 `WEAVIATE_URL` 和 `WEAVIATE_API_KEY` 是否正确
+   - 如果使用云服务，确保 `WEAVIATE_IS_CLOUD=true`
+   - 如果使用本地服务，确保 Weaviate 服务已启动
+3. **Weaviate索引权限问题**：
    - 如果使用云服务，某些API密钥可能没有创建索引的权限
    - 系统会自动处理这种情况，但基于过滤器的查询可能无法工作
-   - 考虑使用具有完整管理权限的API密钥或本地Qdrant实例
+   - 考虑使用具有完整管理权限的API密钥或本地Weaviate实例
 4. **依赖问题**：确保已安装 `langchain_community` 和其他所有依赖
 
-### Qdrant集合
+### doji_memory集合
 
-系统使用以下四个Qdrant集合，会在启动时自动创建：
+系统使用doji_memory (Weaviate backend)，通过项目分类管理以下四个逻辑集合：
 
 1. **`canonical_queries`**：存储规范化查询和缓存的回答
 2. **`conversations`**：存储对话历史记录
@@ -177,7 +178,7 @@ python tests/run_tests.py tests/test_api_keys.py
 | 模块 | 说明 |
 |------|------|
 | 多渠道输入 | 支持 Slack、XHS、YouTube 等平台评论问答 |
-| 多领域支持 | 每个领域配置独立标签和 Qdrant collection |
+| 多领域支持 | 每个领域配置独立标签和 doji_memory 项目分类 |
 | 用户反馈强化 | 用户点赞的内容优先保留或合并为 FAQ |
 | 可视化后台 | 回答历史、知识浏览、标注 UI 等（用 Streamlit 搭建） |
 

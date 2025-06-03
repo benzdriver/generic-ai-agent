@@ -4,29 +4,29 @@ This document explains the purpose and functionality of the scripts in this proj
 
 ## Main Scripts Directory (`/scripts`)
 
-The main scripts directory contains utility scripts for setting up and managing the Qdrant vector database. These scripts are primarily used for system setup, configuration, and testing.
+The main scripts directory contains utility scripts for setting up and managing the doji_memory vector database (Weaviate backend). These scripts are primarily used for system setup, configuration, and testing.
 
 ### Scripts:
 
-1. **`check_qdrant.py`**
-   - **Purpose**: Verify connectivity to the Qdrant vector database
+1. **`check_qdrant.py`** (Legacy - replaced by doji_memory)
+   - **Purpose**: Verify connectivity to the vector database
    - **Functionality**: Tests connection using API key, lists existing collections, and checks if required collections exist
-   - **Usage**: `python scripts/check_qdrant.py`
+   - **Usage**: Now handled by doji_memory initialization
 
-2. **`initialize_collections.py`**
-   - **Purpose**: Create all necessary vector collections in Qdrant
+2. **`initialize_collections.py`** (Legacy - replaced by doji_memory)
+   - **Purpose**: Create all necessary vector collections
    - **Functionality**: Sets up four collections (canonical_queries, conversations, documents, merged_knowledge) with proper configurations
-   - **Usage**: `python scripts/initialize_collections.py`
+   - **Usage**: Now handled by `src.vector_engine.doji_memory_client.init_collections()`
 
-3. **`create_indexes.py`**
-   - **Purpose**: Create field indexes for Qdrant collections
+3. **`create_indexes.py`** (Legacy - replaced by doji_memory)
+   - **Purpose**: Create field indexes for collections
    - **Functionality**: Adds text, keyword, and boolean field indexes to support filtered searches
-   - **Usage**: `python scripts/create_indexes.py`
+   - **Usage**: Now handled automatically by doji_memory/Weaviate
 
-4. **`test_collections.py`**
+4. **`test_collections.py`** (Legacy - replaced by doji_memory)
    - **Purpose**: Test vector insertion and search functionality
    - **Functionality**: Adds test vectors with metadata and performs both regular and filtered searches
-   - **Usage**: `python scripts/test_collections.py`
+   - **Usage**: Use `pytest tests/test_doji_memory_*.py` instead
 
 ## Application Scripts Directory (`/src/scripts`)
 
@@ -61,7 +61,7 @@ The `/src/scripts` directory contains operational scripts that are part of the a
 ## Environment Setup
 
 All scripts require proper environment variables to be set, particularly:
-- `QDRANT_URL`: The URL of your Qdrant instance
-- `QDRANT_API_KEY`: API key with appropriate permissions
+- `WEAVIATE_URL`: The URL of your Weaviate instance (doji_memory backend)
+- `WEAVIATE_API_KEY`: API key with appropriate permissions
 
-These can be set in a `.env` file at the project root. 
+These can be set in a `.env` file at the project root.  
