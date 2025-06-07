@@ -69,6 +69,14 @@ def get_domains_config() -> Dict[str, Any]:
         'default_domain': os.environ.get('DEFAULT_DOMAIN', 'immigration_consultant')
     }
 
+# 向量后端配置
+def get_vector_config() -> Dict[str, Any]:
+    """获取向量后端相关配置"""
+    return {
+        'backend': os.environ.get('VECTOR_BACKEND', 'qdrant'),  # qdrant 或 doji_memory
+        'doji_memory_url': os.environ.get('DOJI_MEMORY_URL', 'http://localhost:8000')
+    }
+
 # 日志配置
 def get_logging_config() -> Dict[str, str]:
     """获取日志相关配置"""
@@ -119,5 +127,6 @@ def init_config(test_mode: bool = False) -> Dict[str, Any]:
         'telegram': get_telegram_config(),
         'knowledge': get_knowledge_config(),
         'logging': get_logging_config(),
-        'domains': get_domains_config()
+        'domains': get_domains_config(),
+        'vector': get_vector_config()
     } 

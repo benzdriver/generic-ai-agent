@@ -2,11 +2,12 @@
 
 """
 检索器：负责相似向量的检索，支持垂直领域定制
+支持 Qdrant 和 Doji Memory 后端切换
 """
 
 from typing import List, Dict, Any, Optional
-from vector_engine.embedding_router import get_embedding
-from vector_engine.qdrant_client import get_client, DOCUMENT_COLLECTION
+from .hybrid_vector_router import get_hybrid_router, VectorBackend
+from .qdrant_client import DOCUMENT_COLLECTION
 
 # 领域特定的集合映射
 DOMAIN_COLLECTIONS = {
@@ -30,8 +31,7 @@ def retrieve_relevant_chunks(query: str, limit: int = 5, domain: str = "default"
     Returns:
         List[Dict[str, Any]]: 检索到的相关文本块列表
     """
-    client = get_client()
-    query_vector = get_embedding(query)
+    router = get_hybrid_router()
     
     # 获取领域特定的集合名称
     collection_name = DOMAIN_COLLECTIONS.get(domain, DOCUMENT_COLLECTION)
@@ -50,15 +50,26 @@ def retrieve_relevant_chunks(query: str, limit: int = 5, domain: str = "default"
             ]
         }
     
-    # 执行检索
-    results = client.search(
-        collection_name=collection_name,
-        query_vector=query_vector,
-        limit=limit,
-        query_filter=filter_condition
-    )
+    # 根据后端类型执行不同的检索逻辑
+    if router.backend == VectorBackend.QDRANT:
+        # Qdrant 需要向量
+        query_vector = router.get_embedding(query)
+        results = router.search(
+            collection_name=collection_name,
+            query_vector=query_vector,
+            limit=limit,
+            query_filter=filter_condition
+        )
+    else:
+        # Doji Memory 可以直接用文本搜索
+        results = router.search(
+            collection_name=collection_name,
+            query_text=query,
+            limit=limit,
+            query_filter=filter_condition
+        )
     
-    return [hit.payload for hit in results]
+    return [result["payload"] for result in results]
 
 def register_domain_collection(domain: str, collection_name: str) -> None:
     """注册新的领域集合映射
