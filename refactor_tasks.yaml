@@ -1,0 +1,34 @@
+- module: global
+  tasks:
+    - Clarify and document the official project structure vs. what is in the README.
+    - Add type hinting across the entire codebase for better readability and static analysis.
+    - Implement a centralized, dependency-injected client for services (LLM, VectorDB).
+
+- module: config
+  tasks:
+    - Consolidate `env_manager.py` and `domain_manager.py` into a single, unified config module.
+    - Use Pydantic for loading and validating all configurations.
+
+- module: vector_engine
+  tasks:
+    - Create a `base_vector_store.py` with an abstract interface for vector operations.
+    - Refactor `qdrant_client.py` into a `qdrant_vector_store.py` that implements the base interface.
+    - Update `retriever.py` and `vector_indexer.py` to use the abstract interface.
+
+- module: agent_core
+  tasks:
+    - Create a `llm.py` or `llm_client.py` module with a base class for LLM interactions.
+    - Create concrete implementations for different LLM providers (e.g., `openai_client.py`).
+    - Refactor `response_router.py` to use the LLM client via dependency injection.
+    - Rename `canonical_router.py` to `query_normalizer.py` for clarity.
+
+- module: knowledge_manager
+  tasks:
+    - Refactor `cluster_merger.py` to use the abstract LLM client.
+    - Document the purpose of `conflict_detector.py` in the README.
+
+- module: tests
+  tasks:
+    - Add unit tests for each module, focusing on business logic.
+    - Mock external services (LLM, VectorDB) in tests to make them faster and more reliable.
+    - Add integration tests for the full RAG pipeline. 

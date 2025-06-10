@@ -1,0 +1,16 @@
+# Cursor ignore configuration
+# This file controls what Cursor ignores, separate from .gitignore
+
+# We want Cursor to access .env files for configuration
+!.env
+!.env.local
+!.env.example
+
+# But still ignore these directories/files for performance
+__pycache__/
+*.pyc
+.pytest_cache/
+node_modules/
+.git/
+venv/
+.venv/ 

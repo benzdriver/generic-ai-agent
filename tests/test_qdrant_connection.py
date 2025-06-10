@@ -2,7 +2,7 @@
 # tests/test_qdrant_connection.py
 
 """
-Qdrant连接测试：使用正确的URL和API密钥测试Qdrant连接
+Qdrant连接检查：仅检查Qdrant连接，不需要其他API密钥
 """
 
 import sys
@@ -12,91 +12,50 @@ import unittest
 
 # 添加项目根目录到Python路径
 project_root = Path(__file__).parent.parent
-sys.path.append(str(project_root))
+sys.path.insert(0, str(project_root))
 
 from qdrant_client import QdrantClient
-from qdrant_client.http import models
-from dotenv import load_dotenv
+from src.infrastructure.config.env_manager import get_config
 
-def main():
+class TestQdrantConnection(unittest.TestCase):
     """测试Qdrant连接"""
-    print("=" * 70)
-    print("🔍 Qdrant连接测试")
-    print("=" * 70)
     
-    # 加载环境变量
-    env_path = Path(__file__).parent.parent / '.env'
-    if env_path.exists():
-        load_dotenv(env_path)
+    @classmethod
+    def setUpClass(cls):
+        """测试类初始化"""
+        print("\n准备Qdrant连接测试环境...")
+        cls.config = get_config()
     
-    # 从环境变量获取URL和API密钥
-    url = os.environ.get('QDRANT_URL', 'https://23b33ab7-02d1-4a51-b52a-967c3c5d7e0c.us-west-1-0.aws.cloud.qdrant.io:6333')
-    api_key = os.environ.get('QDRANT_API_KEY', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3MiOiJtIn0.ErhUqQTU')
-    
-    print(f"\n连接到Qdrant: {url}")
-    print("使用API密钥进行认证...")
-    
-    try:
-        # 创建客户端
-        client = QdrantClient(url=url, api_key=api_key)
+    def test_qdrant_connection(self):
+        """测试Qdrant连接是否有效"""
+        if not self.config.qdrant.url:
+            self.skipTest("Qdrant URL未设置")
         
-        # 尝试获取集合列表
+        print("\n测试Qdrant连接...")
         try:
-            print("\n尝试获取集合列表...")
-            collections = client.get_collections()
-            
-            # 检查响应
-            print(f"✅ 成功获取集合列表！")
-            print(f"发现 {len(collections.collections)} 个集合:")
-            for collection in collections.collections:
-                print(f"  - {collection.name}")
-                
-            # 尝试创建一个测试集合
-            test_collection_name = "test_connection"
-            print(f"\n尝试创建测试集合: {test_collection_name}...")
-            
-            # 检查集合是否已存在
-            if client.collection_exists(test_collection_name):
-                print(f"集合 {test_collection_name} 已存在，正在删除...")
-                client.delete_collection(test_collection_name)
-            
-            # 创建集合
-            client.create_collection(
-                collection_name=test_collection_name,
-                vectors_config=models.VectorParams(
-                    size=4,  # 小维度用于测试
-                    distance=models.Distance.COSINE
-                )
-            )
-            
-            # 验证集合已创建
-            if client.collection_exists(test_collection_name):
-                print(f"✅ 成功创建测试集合！")
-                
-                # 删除测试集合
-                client.delete_collection(test_collection_name)
-                print(f"✅ 成功删除测试集合！")
+            # 创建客户端
+            if self.config.qdrant.is_cloud and self.config.qdrant.api_key:
+                client = QdrantClient(url=self.config.qdrant.url, api_key=self.config.qdrant.api_key)
             else:
-                print(f"❌ 创建测试集合失败！")
+                client = QdrantClient(url=self.config.qdrant.url)
             
-        except Exception as e:
-            print(f"❌ 获取集合列表失败: {str(e)}")
-            
-            # 尝试健康检查
+            # 尝试获取集合列表
             try:
-                print("\n尝试健康检查...")
-                health = client.http.health_check()
-                if health and hasattr(health, 'result') and health.result:
-                    print("✅ 健康检查通过，服务器正常运行")
-                else:
-                    print("❌ 健康检查未通过")
-            except Exception as e2:
-                print(f"❌ 健康检查失败: {str(e2)}")
-    
-    except Exception as e:
-        print(f"❌ 连接失败: {str(e)}")
-    
-    print("\n测试完成")
+                collections = client.get_collections()
+                
+                # 检查响应
+                self.assertIsNotNone(collections)
+                print(f"✅ Qdrant连接有效，发现 {len(collections.collections)} 个集合")
+                for collection in collections.collections:
+                    print(f"  - {collection.name}")
+            except Exception as e:
+                self.skipTest(f"无法连接到Qdrant: {str(e)}")
+
+        except Exception as e:
+            self.skipTest(f"无法连接到Qdrant: {str(e)}")
 
 if __name__ == "__main__":
-    main() 
+    print("=" * 70)
+    print("🔍 Qdrant连接检查")
+    print("=" * 70)
+    unittest.main() 

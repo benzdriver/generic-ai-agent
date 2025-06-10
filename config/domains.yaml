@@ -1,0 +1,36 @@
+domains:
+  finance:
+    collection_name: finance_docs
+    description: Financial market information
+    quality_rules:
+      min_length: 100
+      required_patterns:
+      - market
+      - stock
+      - finance
+      - investment
+    sources:
+    - name: Yahoo_Finance
+      selectors:
+        content: article, .content
+        exclude: nav, .ad
+      type: website
+      url: https://finance.yahoo.com/news
+    update_frequency_days: 1
+  immigration:
+    collection_name: immigration_docs
+    description: Immigration and visa information
+    quality_rules:
+      min_length: 50
+      required_patterns:
+      - immigration
+      - visa
+      - canada
+    sources:
+    - name: IRCC_PNP
+      selectors:
+        content: main, .container
+        exclude: nav, footer, .breadcrumb
+      type: website
+      url: https://www.canada.ca/en/immigration-refugees-citizenship/services/immigrate-canada/provincial-nominees.html
+    update_frequency_days: 7

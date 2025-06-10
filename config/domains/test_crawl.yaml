@@ -1,0 +1,36 @@
+description: 'Test crawl for Start-up Visa information'
+collection_name: 'test_crawl_docs'
+sources:
+  - name: 'SUV_Test_Crawl'
+    url: 'https://www.canada.ca/en/immigration-refugees-citizenship/services/immigrate-canada/start-visa.html'
+    type: 'website'
+    parser_config:
+      deep_crawl: true
+      max_depth: 2      # 只爬2层
+      max_pages: 10     # 只爬10个页面
+      selectors:
+        content: 'main, article, .content, #content, p, section, div'
+        exclude: 'script, style, nav, footer, header, .navigation'
+      min_paragraph_length: 20
+      max_paragraphs: 200
+      exclude_link_patterns:
+        - "/fr/"
+        - "/news"
+        - ".pdf"
+        
+quality_rules:
+  min_length: 20
+  max_length: 10000
+  enable_semantic_check: true
+  semantic_relevance_threshold: 0.2
+  required_patterns: []
+  forbidden_patterns: []
+  
+test_queries:
+  - query: 'What is the Start-up Visa program?'
+    relevant: true
+  - query: 'How to apply for Start-up Visa?'
+    relevant: true
+    
+update_frequency_days: 7
+enabled: true 

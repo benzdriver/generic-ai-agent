@@ -1,0 +1,5 @@
+description: test_prompt_domain领域
+name: test_prompt_domain
+prompt_template: 测试提示词：{context} 问题：{query}
+tags: []
+vector_collection: test_prompt_domain_docs

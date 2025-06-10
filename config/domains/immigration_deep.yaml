@@ -1,0 +1,52 @@
+description: 'Canadian immigration information with deep crawling'
+collection_name: 'immigration_deep_docs'
+sources:
+  - name: 'IRCC_Deep_Crawl'
+    url: 'https://www.canada.ca/en/immigration-refugees-citizenship.html'
+    type: 'website'
+    parser_config:
+      deep_crawl: true  # 启用深层爬取
+      use_scrapy: true  # 使用Scrapy高速爬虫（适合静态网站）
+      max_depth: 20     # 增加到10层深度，让AI决定是否继续
+      max_pages: 2000   # 增加到1000页，足以覆盖整个官网
+      selectors:
+        content: 'main, article, .content, #content, p, section, div, li'  # 添加更多选择器
+        exclude: 'script, style, nav, footer, header, .navigation, .skip-link'
+      min_paragraph_length: 20  # 降低最小段落长度
+      max_paragraphs: 500      # 增加最大段落数
+      exclude_link_patterns:
+        - "news-release"
+        - "/news"
+        - "/videos"
+        - "/minister"
+        - "/contact"
+        - "serving-canadians"
+        - "corporate/transparency"
+        - "/stats"      
+        - "/reports"    
+      keywords:  # Scrapy爬虫使用的关键词
+        - 'immigration'
+        - 'visa'
+        - 'permit'
+        - 'canada'
+        - 'express entry'
+        - 'provincial nominee'
+        - 'start-up'
+        
+quality_rules:
+  min_length: 20        # 降低最小长度
+  max_length: 10000     # 增加最大长度
+  enable_semantic_check: true
+  semantic_relevance_threshold: 0.2  # 降低阈值，让更多内容通过
+  required_patterns: []  # 深层爬取不需要必需模式
+  
+test_queries:
+  - query: 'What is the Start-up Visa (SUV) program?'
+    relevant: true
+  - query: 'How to apply for Express Entry?'
+    relevant: true
+  - query: 'What are the requirements for Provincial Nominee Program?'
+    relevant: true
+    
+update_frequency_days: 7
+enabled: true 

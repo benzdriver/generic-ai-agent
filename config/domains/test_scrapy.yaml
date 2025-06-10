@@ -1,0 +1,47 @@
+description: 'Test Scrapy crawler for Start-up Visa information'
+collection_name: 'test_scrapy_docs'
+sources:
+  - name: 'SUV_Scrapy_Test'
+    url: 'https://www.canada.ca/en/immigration-refugees-citizenship/services/immigrate-canada/start-visa.html'
+    type: 'website'
+    parser_config:
+      deep_crawl: true
+      use_scrapy: true      # 启用Scrapy爬虫
+      max_depth: 2          # 只爬2层
+      max_pages: 20         # 只爬20个页面
+      selectors:
+        content: 'main, article, .content, #content, p, section, div, li'
+        exclude: 'script, style, nav, footer, header, .navigation'
+      min_paragraph_length: 20
+      max_paragraphs: 200
+      exclude_link_patterns:
+        - "/fr/"
+        - "/news"
+        - ".pdf"
+        - "/contact/"
+      keywords:
+        - 'start-up'
+        - 'visa'
+        - 'entrepreneur'
+        - 'business'
+        - 'immigration'
+        - 'canada'
+        
+quality_rules:
+  min_length: 20
+  max_length: 10000
+  enable_semantic_check: true
+  semantic_relevance_threshold: 0.2
+  required_patterns: []
+  forbidden_patterns: []
+  
+test_queries:
+  - query: 'What is the Start-up Visa program?'
+    relevant: true
+  - query: 'How to apply for Start-up Visa?'
+    relevant: true
+  - query: 'Start-up Visa eligibility requirements'
+    relevant: true
+    
+update_frequency_days: 7
+enabled: true 

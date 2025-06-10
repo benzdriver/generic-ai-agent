@@ -1,0 +1,99 @@
+# 数据保护和合规策略配置
+
+# 适用法规
+applicable_regulations:
+  - name: "PIPEDA"
+    description: "Personal Information Protection and Electronic Documents Act (Canada)"
+    jurisdiction: "Canada"
+  - name: "CCPA"
+    description: "California Consumer Privacy Act (USA)"
+    jurisdiction: "California, USA"
+  - name: "SOX"
+    description: "Sarbanes-Oxley Act (USA)"
+    jurisdiction: "USA"
+
+# 数据分类策略
+data_classification:
+  public:
+    description: "公开可访问的信息"
+    retention_days: 365
+    encryption_required: false
+  internal:
+    description: "内部使用信息"
+    retention_days: 1095  # 3年
+    encryption_required: false
+  confidential:
+    description: "机密信息，包含业务敏感数据"
+    retention_days: 2555  # 7年
+    encryption_required: true
+  restricted:
+    description: "受限信息，包含PII"
+    retention_days: 2555  # 7年
+    encryption_required: true
+    access_approval_required: true
+
+# PII 检测和处理
+pii_handling:
+  detection_patterns:
+    enabled: true
+    log_pii_types: true
+    auto_mask: true
+  retention:
+    pii_logs_days: 2555  # 7年，符合移民咨询行业要求
+    audit_logs_days: 2555  # 7年
+    general_logs_days: 365  # 1年
+  access_control:
+    pii_access_roles: ["compliance_officer", "legal_counsel", "authorized_admin"]
+    audit_all_access: true
+
+# 审计要求
+audit_requirements:
+  log_all_interactions: true
+  structured_logging: true
+  immutable_logs: true
+  real_time_monitoring: false
+  compliance_reporting: true
+  incident_response: true
+
+# 用户权利 (PIPEDA/CCPA 要求)
+user_rights:
+  access_request: true          # 用户可请求访问其数据
+  correction_request: true      # 用户可请求更正数据
+  deletion_request: true        # 用户可请求删除数据
+  portability_request: true     # 用户可请求数据导出
+  opt_out: true                # 用户可选择退出数据处理
+
+# 数据保留策略
+retention_policy:
+  default_retention_days: 365
+  legal_hold_override: true     # 法律保留可覆盖标准策略
+  automatic_deletion: true
+  deletion_verification: true
+
+# 安全要求
+security_requirements:
+  encryption_at_rest: true
+  encryption_in_transit: true
+  access_logging: true
+  failed_access_monitoring: true
+  regular_security_audits: true
+
+# 通知要求
+notification_requirements:
+  data_breach_notification_hours: 72
+  user_notification_required: true
+  regulatory_notification_required: true
+  
+# 合规监控
+compliance_monitoring:
+  automated_compliance_checks: true
+  regular_compliance_reports: true
+  third_party_audits: true
+  staff_training_required: true
+
+# 移民咨询行业特殊要求
+immigration_specific:
+  client_privilege_protection: true    # 律师-客户特权保护
+  cross_border_data_restrictions: true # 跨境数据传输限制
+  regulatory_reporting: true           # 监管报告要求
+  professional_liability: true        # 专业责任保险要求 

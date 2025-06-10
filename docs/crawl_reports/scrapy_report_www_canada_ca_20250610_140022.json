@@ -1,0 +1,14 @@
+{
+  "start_url": "https://www.canada.ca/en/immigration-refugees-citizenship/services/immigrate-canada/start-visa.html",
+  "timestamp": "20250610_140022",
+  "crawler_type": "scrapy",
+  "statistics": {
+    "total_pages": 0,
+    "successful_pages": 0,
+    "total_links": 0,
+    "pages_by_depth": {},
+    "pages_by_importance": {},
+    "skipped_low_importance": 0
+  },
+  "results": []
+}

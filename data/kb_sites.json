@@ -1,0 +1,29 @@
+[
+  {
+    "name": "IRCC_PNP",
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/services/immigrate-canada/provincial-nominees.html",
+    "description": "Provincial Nominee Program",
+    "priority": 1,
+    "update_days": 3,
+    "last_updated": "2025-06-10T04:52:07.969047",
+    "content_hash": "1356fcecb11aa1f1c06761598223e51b"
+  },
+  {
+    "name": "IRCC_SUV",
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/services/immigrate-canada/start-visa.html",
+    "description": "Start-up Visa Program",
+    "priority": 1,
+    "update_days": 7,
+    "last_updated": "2025-06-10T04:52:26.770942",
+    "content_hash": "0f662e4531c66116b32be2fd99c8072e"
+  },
+  {
+    "name": "IRCC_Express_Entry",
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/services/immigrate-canada/express-entry.html",
+    "description": "Express Entry System",
+    "priority": 1,
+    "update_days": 3,
+    "last_updated": "2025-06-10T04:52:49.437259",
+    "content_hash": "dcb0e92cb6d09c1c6e582896471ed3a2"
+  }
+]

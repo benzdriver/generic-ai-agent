@@ -1,6 +1,5 @@
 # Core dependencies
 beautifulsoup4>=4.10.0  # HTML parsing for doc_parser.py
-langchain>=0.1.0       # AI framework integration
 numpy>=1.24.0         # Vector operations for conflict_detector.py
 openai>=1.0.0         # GPT and Embedding API
 pandas>=1.4.0         # Data manipulation
@@ -13,8 +12,20 @@ scikit-learn>=1.0.0   # For KMeans clustering
 tqdm>=4.64.0          # Progress bars
 anthropic>=0.18.0     # Anthropic Claude API
 
+# Web Crawling dependencies
+playwright>=1.40.0    # Browser automation for web crawling
+aiohttp>=3.9.0       # Async HTTP client
+
 # Optional dependencies
 pytest>=7.0.0         # For unit testing
 black>=23.0.0         # Code formatting
 flake8>=6.0.0         # Code linting
+
+# New additions for crawling and parsing
+uvicorn
+watchfiles
+websockets
+xmltodict
+yarl
+feedparser
 

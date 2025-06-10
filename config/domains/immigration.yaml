@@ -1,0 +1,165 @@
+# ===================================================================
+# Domain: Immigration (Canada)
+# ===================================================================
+description: "Knowledge base for Canadian immigration programs, including federal and provincial streams."
+collection_name: "immigration_canada_docs"
+update_frequency_days: 7
+enabled: true
+
+# Quality rules to ensure content is relevant and high-quality
+quality_rules:
+  # --- Semantic Relevance Check ---
+  enable_semantic_check: true
+  # Lowering the threshold to include more contextually relevant paragraphs.
+  # A score of 0.3 is a good balance between relevance and inclusiveness.
+  semantic_relevance_threshold: 0.3
+
+  # --- Basic Structural Rules (Loosened) ---
+  min_length: 25 # 允许更短的句子
+  min_words: 5   # 确保至少有几个词
+  max_length: 5000
+
+  # --- This is no longer needed with semantic checking ---
+  # required_patterns: 
+  #   - "immigration"
+  #   - "visa"
+  #   - "permanent resident"
+
+  # --- Still useful for filtering out junk ---
+  forbidden_patterns:
+    - "advertisement"
+    - "job posting"
+    - "ad"
+    - "for sale"
+    - "give feedback about this page"
+    - "report a problem or mistake on this page"
+    - "you will not receive a reply"
+
+# Test queries to validate the relevance and accuracy of the knowledge base
+test_queries:
+  - query: "How do I apply for Express Entry?"
+    relevant: true
+  - query: "What are the requirements for the Ontario PNP?"
+    relevant: true
+  - query: "Can I bring my family to Canada?"
+    relevant: true
+  - query: "Tell me about the Start-up Visa Program."
+    relevant: true
+  - query: "What is the best way to get a US green card?"
+    relevant: false # Not about Canada
+  - query: "Find me a cheap flight to Toronto."
+    relevant: false # Not about immigration
+  - query: "I want to buy a house in Vancouver."
+    relevant: false # Not about immigration
+
+# ===================================================================
+# Data Sources
+# ===================================================================
+sources:
+  # -----------------------------------------------------------------
+  # Federal Programs (IRCC)
+  # -----------------------------------------------------------------
+  - name: "IRCC_Express_Entry"
+    url: "https://www.canada.ca/en/immigration-refugees-citizenship/services/immigrate-canada/express-entry.html"
+    type: "website"
+    priority: 1
+  - name: "IRCC_Express_Entry_Eligibility"
+    url: "https://www.canada.ca/en/immigration-refugees-citizenship/services/immigrate-canada/express-entry/who-can-apply.html"
+    type: "website"
+    priority: 1
+  - name: "IRCC_Provincial_Nominees"
+    url: "https://www.canada.ca/en/immigration-refugees-citizenship/services/immigrate-canada/provincial-nominees.html"
+    type: "website"
+    priority: 1
+  - name: "IRCC_Start_Up_Visa"
+    url: "https://www.canada.ca/en/immigration-refugees-citizenship/services/immigrate-canada/start-visa.html"
+    type: "website"
+    priority: 1
+  - name: "IRCC_Family_Sponsorship"
+    url: "https://www.canada.ca/en/immigration-refugees-citizenship/services/immigrate-canada/family-sponsorship.html"
+    type: "website"
+    priority: 1
+  - name: "IRCC_Work_Permits"
+    url: "https://www.canada.ca/en/immigration-refugees-citizenship/services/work-canada.html"
+    type: "website"
+    priority: 1
+  - name: "IRCC_Study_Permits"
+    url: "https://www.canada.ca/en/immigration-refugees-citizenship/services/study-canada.html"
+    type: "website"
+    priority: 1
+  - name: "IRCC_Caregivers"
+    url: "https://www.canada.ca/en/immigration-refugees-citizenship/services/immigrate-canada/caregivers.html"
+    type: "website"
+    priority: 2
+  - name: "IRCC_Agri_Food_Pilot"
+    url: "https://www.canada.ca/en/immigration-refugees-citizenship/services/immigrate-canada/agri-food-pilot.html"
+    type: "website"
+    priority: 2
+  - name: "IRCC_Atlantic_Immigration"
+    url: "https://www.canada.ca/en/immigration-refugees-citizenship/services/immigrate-canada/atlantic-immigration.html"
+    type: "website"
+    priority: 2
+  - name: "IRCC_Rural_Northern_Pilot"
+    url: "https://www.canada.ca/en/immigration-refugees-citizenship/services/immigrate-canada/rural-northern-immigration-pilot.html"
+    type: "website"
+    priority: 2
+
+  # -----------------------------------------------------------------
+  # Provincial Nominee Programs (PNP)
+  # -----------------------------------------------------------------
+  - name: "PNP_Ontario"
+    url: "https://www.ontario.ca/page/ontario-immigrant-nominee-program-oinp"
+    type: "website"
+    priority: 2
+  - name: "PNP_British_Columbia"
+    url: "https://www.welcomebc.ca/immigrate-to-b-c/b-c-provincial-nominee-program"
+    type: "website"
+    priority: 2
+  - name: "PNP_Alberta"
+    url: "https://www.alberta.ca/alberta-advantage-immigration-program"
+    type: "website"
+    priority: 2
+  - name: "PNP_Saskatchewan"
+    url: "https://www.saskatchewan.ca/residents/moving-to-saskatchewan/saskatchewan-immigrant-nominee-program"
+    type: "website"
+    priority: 2
+  - name: "PNP_Manitoba"
+    url: "https://immigratemanitoba.com/"
+    type: "website"
+    priority: 2
+  - name: "PNP_Nova_Scotia"
+    url: "https://novascotiaimmigration.com/move-here/"
+    type: "website"
+    priority: 2
+  - name: "PNP_New_Brunswick"
+    url: "https://www.welcomenb.ca/"
+    type: "website"
+    priority: 2
+  - name: "PNP_PEI"
+    url: "https://www.princeedwardisland.ca/en/topic/office-immigration"
+    type: "website"
+    priority: 2
+  - name: "PNP_Newfoundland_Labrador"
+    url: "https://www.gov.nl.ca/immigration/"
+    type: "website"
+    priority: 2
+  - name: "PNP_Yukon"
+    url: "https://yukon.ca/en/immigrate-yukon"
+    type: "website"
+    priority: 3
+  - name: "PNP_Northwest_Territories"
+    url: "https://www.immigratenwt.ca/northwest-territories-nominee-program"
+    type: "website"
+    priority: 3
+  
+  # -----------------------------------------------------------------
+  # Quebec Programs (Separate System)
+  # -----------------------------------------------------------------
+  - name: "Quebec_Official_Site"
+    url: "https://www.quebec.ca/en/immigration"
+    type: "website"
+    priority: 2
+  - name: "Arrima_Portal"
+    url: "https://www.quebec.ca/en/immigration/arrima-services-for-immigration-applicants"
+    type: "website"
+    priority: 3 
