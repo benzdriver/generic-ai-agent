@@ -11,6 +11,7 @@ requests>=2.25.1      # HTTP client for API calls
 scikit-learn>=1.0.0   # For KMeans clustering
 tqdm>=4.64.0          # Progress bars
 anthropic>=0.18.0     # Anthropic Claude API
+dependency-injector>=4.41.0 # Dependency Injection
 
 # Web Crawling dependencies
 playwright>=1.40.0    # Browser automation for web crawling

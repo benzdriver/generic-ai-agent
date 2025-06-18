@@ -24,10 +24,12 @@ wheels/
 venv/
 env/
 ENV/
-.env
-.env.local
-.venv
+.venv/
 .python-version
+.env
+.env.*
+!/.env.example
+!/.env.template
 
 # IDE
 .idea/

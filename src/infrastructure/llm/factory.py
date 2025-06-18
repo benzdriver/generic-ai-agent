@@ -2,21 +2,21 @@
 
 from .base import BaseLLM
 from .openai_client import OpenAILLM
-from ..config.env_manager import get_config
+from ..config.env_manager import Config
+
 
 class LLMFactory:
     """Factory for creating LLM clients."""
 
     @staticmethod
-    def get_llm(provider: str = "openai") -> BaseLLM:
+    def get_llm(config: Config, provider: str = "openai") -> BaseLLM:
         """Get an LLM client based on the provider."""
         if provider == "openai":
-            # Check if OpenAI API key is available
-            if not get_config().openai.api_key:
+            if not config.openai.api_key:
                 raise ValueError("OpenAI API key is not configured.")
-            return OpenAILLM()
+            return OpenAILLM(config.openai)
         # Add other providers here in the future
         # elif provider == "anthropic":
-        #     return AnthropicLLM()
+        #     return AnthropicLLM(config.anthropic)
         else:
-            raise ValueError(f"Unsupported LLM provider: {provider}") 
+            raise ValueError(f"Unsupported LLM provider: {provider}")
