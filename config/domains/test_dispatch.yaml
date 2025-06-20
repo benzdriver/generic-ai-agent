@@ -1,0 +1,14 @@
+description: 'A small test domain to verify the dispatching mechanism.'
+collection_name: 'test_dispatch_docs'
+sources:
+  - name: 'ExampleCrawl'
+    url: 'http://example.com'
+    type: 'website'
+    parser_config:
+      max_depth: 2
+      max_pages: 5
+      
+quality_rules:
+  min_length: 10
+  
+enabled: true 

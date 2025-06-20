@@ -36,17 +36,29 @@ Comprehensive compliance documentation suite covering data protection, privacy, 
 
 ### 🔧 Technical Documentation
 
-#### 📄 Domain Integration Guide
-**File**: [`domain_integration_guide.md`](domain_integration_guide.md)
+#### 🚀 Crawler Documentation
+**Location**: [`crawler/`](crawler/)
 
-Comprehensive guide for integrating the Generic AI Agent with domain-specific knowledge and processes.
+Complete documentation suite for the intelligent crawler system:
+- [`CRAWLER_IMPROVEMENT_PLAN.md`](crawler/CRAWLER_IMPROVEMENT_PLAN.md) - Technical improvement specifications
+- [`AI_AUTONOMOUS_CRAWLER_SYSTEM.md`](crawler/AI_AUTONOMOUS_CRAWLER_SYSTEM.md) - Autonomous crawler architecture
+- [`AI_INCREMENTAL_UPDATE_SYSTEM.md`](crawler/AI_INCREMENTAL_UPDATE_SYSTEM.md) - Incremental update design
+- [`CRAWLER_HUMAN_REVIEW_SYSTEM.md`](crawler/CRAWLER_HUMAN_REVIEW_SYSTEM.md) - Quality control systems
+- [`DOCKER_CRAWLER_SERVICE_DESIGN.md`](crawler/DOCKER_CRAWLER_SERVICE_DESIGN.md) - Containerized deployment
 
-**Contents**:
-- Domain knowledge integration strategies
-- Custom model training approaches
-- API integration patterns
-- Performance optimization techniques
-- Testing and validation procedures
+#### 📄 Integration Guides
+- **[`domain_integration_guide.md`](domain_integration_guide.md)** - Multi-domain support configuration
+- **[`web_crawler_guide.md`](web_crawler_guide.md)** - Web crawling functionality integration
+- **[`boundary_detection_best_practices.md`](boundary_detection_best_practices.md)** - Cost optimization strategies
+- **[`GENERIC_KNOWLEDGE_BEST_PRACTICES.md`](GENERIC_KNOWLEDGE_BEST_PRACTICES.md)** - Knowledge management best practices
+
+#### 📁 Archived Documentation
+**Location**: [`archived/`](archived/)
+
+Historical documents for reference:
+- Legacy system structures
+- Completed refactoring records
+- Superseded documentation
 
 ---
 

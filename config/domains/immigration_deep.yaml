@@ -7,6 +7,7 @@ sources:
     parser_config:
       deep_crawl: true  # 启用深层爬取
       use_scrapy: true  # 使用Scrapy高速爬虫（适合静态网站）
+      importance_threshold: 0.3 # 降低重要性阈值以进行更深层次的爬取
       max_depth: 20     # 增加到10层深度，让AI决定是否继续
       max_pages: 2000   # 增加到1000页，足以覆盖整个官网
       selectors:

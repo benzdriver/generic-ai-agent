@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  # Minimal API service for testing
+  api:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.api
+    ports:
+      - "8080:8080"
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - POSTGRES_URL=postgresql://crawler:password@postgres:5432/crawler_db
+      - QDRANT_URL=http://qdrant:6333
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-test_key}
+      - LOG_LEVEL=DEBUG
+    depends_on:
+      - redis
+    volumes:
+      - ./:/app:ro  # Mount code for development
+
+  # Redis only for minimal test
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+volumes:
+  redis_data:

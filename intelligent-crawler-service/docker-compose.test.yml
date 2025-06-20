@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+  # Test runner service
+  test-runner:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.api
+    command: pytest tests/ -v
+    environment:
+      - TESTING=true
+      - API_URL=http://api:8080
+      - REDIS_URL=redis://redis:6379
+      - POSTGRES_URL=postgresql://crawler:password@postgres:5432/crawler_db
+      - QDRANT_URL=http://qdrant:6333
+    depends_on:
+      api:
+        condition: service_healthy
+    networks:
+      - test_network
+
+  # API service for testing
+  api:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.api
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - POSTGRES_URL=postgresql://crawler:password@postgres:5432/crawler_db
+      - QDRANT_URL=http://qdrant:6333
+      - OPENAI_API_KEY=test_key
+      - LOG_LEVEL=DEBUG
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    depends_on:
+      - redis
+      - postgres
+      - qdrant
+    networks:
+      - test_network
+
+  # Test dependencies
+  redis:
+    image: redis:7-alpine
+    networks:
+      - test_network
+
+  postgres:
+    image: postgres:15
+    environment:
+      - POSTGRES_DB=crawler_db
+      - POSTGRES_USER=crawler
+      - POSTGRES_PASSWORD=password
+    networks:
+      - test_network
+
+  qdrant:
+    image: qdrant/qdrant:latest
+    networks:
+      - test_network
+
+networks:
+  test_network:
+    driver: bridge

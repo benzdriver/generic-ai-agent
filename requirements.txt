@@ -4,6 +4,7 @@ numpy>=1.24.0         # Vector operations for conflict_detector.py
 openai>=1.0.0         # GPT and Embedding API
 pandas>=1.4.0         # Data manipulation
 python-dotenv>=1.0.0  # Environment variable management
+pydantic-settings>=2.0.0 # Pydantic settings management
 python-telegram-bot>=20.0  # Telegram bot interface
 PyYAML>=6.0           # YAML config parsing for tagger.py
 qdrant-client>=1.3.0  # Vector database client
@@ -28,4 +29,7 @@ websockets
 xmltodict
 yarl
 feedparser
+
+# Scrapy for crawling
+scrapy
 

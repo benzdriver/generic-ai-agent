@@ -24,6 +24,8 @@ CANONICAL_COLLECTION = "canonical_queries"  # 规范化查询集合
 CONVERSATION_COLLECTION = "conversations"   # 对话历史集合
 DOCUMENT_COLLECTION = "documents"          # 文档知识库集合
 MERGED_COLLECTION = "merged_knowledge"     # 合并知识点集合
+CRAWLED_DOCUMENTS_COLLECTION = "crawled_documents"  # 爬虫抓取的文档集合
+PAGE_SUMMARIES_COLLECTION = "page_summaries"  # 页面摘要集合
 
 def store_collection_metadata(client, collection_name, description):
     """使用特殊向量点存储集合元数据
@@ -90,7 +92,9 @@ def main():
             (CANONICAL_COLLECTION, "规范化查询集合，存储用户查询的标准形式"),
             (CONVERSATION_COLLECTION, "对话历史集合，存储用户对话记录"),
             (DOCUMENT_COLLECTION, "文档知识库集合，存储官方文档内容"),
-            (MERGED_COLLECTION, "合并知识点集合，存储去重后的知识")
+            (MERGED_COLLECTION, "合并知识点集合，存储去重后的知识"),
+            (CRAWLED_DOCUMENTS_COLLECTION, "爬虫服务抓取的网页文档"),
+            (PAGE_SUMMARIES_COLLECTION, "AI生成的网页摘要")
         ]
         
         print("\n开始创建集合...")

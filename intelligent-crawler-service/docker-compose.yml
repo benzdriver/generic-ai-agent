@@ -1,0 +1,151 @@
+version: '3.8'
+
+services:
+  # API网关
+  api:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.api
+    ports:
+      - "8080:8080"
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - POSTGRES_URL=postgresql://crawler:password@postgres:5432/crawler_db
+      - QDRANT_URL=http://qdrant:6333
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+    depends_on:
+      - redis
+      - postgres
+      - qdrant
+    volumes:
+      - ./config:/app/config:ro
+    networks:
+      - default_network
+
+  # 爬虫工作器
+  crawler-worker:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.crawler
+    deploy:
+      replicas: 3  # 可扩展
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - POSTGRES_URL=postgresql://crawler:password@postgres:5432/crawler_db
+      - BROWSER_POOL_SIZE=5
+    depends_on:
+      - redis
+      - postgres
+    volumes:
+      - ./downloads:/app/downloads
+    networks:
+      - default_network
+
+  # AI评估工作器
+  ai-worker:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.api
+    deploy:
+      replicas: 2
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - LLM_PROVIDER=${LLM_PROVIDER:-openai}
+    depends_on:
+      - redis
+    networks:
+      - default_network
+
+  # 向量化工作器
+  vectorizer-worker:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.api
+    deploy:
+      replicas: 2
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - QDRANT_URL=http://qdrant:6333
+      - EMBEDDING_MODEL=${EMBEDDING_MODEL:-text-embedding-3-small}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    depends_on:
+      - redis
+      - qdrant
+    networks:
+      - default_network
+
+  # 增量更新调度器
+  updater:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.api
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - POSTGRES_URL=postgresql://crawler:password@postgres:5432/crawler_db
+      - UPDATE_CHECK_INTERVAL=3600  # 1小时
+    depends_on:
+      - redis
+      - postgres
+    networks:
+      - default_network
+
+  # Redis - 任务队列和缓存
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    networks:
+      - default_network
+
+  # PostgreSQL - 元数据存储
+  postgres:
+    image: postgres:15
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=crawler_db
+      - POSTGRES_USER=crawler
+      - POSTGRES_PASSWORD=password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - default_network
+
+  # Qdrant - 向量数据库
+  qdrant:
+    image: qdrant/qdrant:latest
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - qdrant_data:/qdrant/storage
+    networks:
+      - default_network
+
+  # 监控界面 (可选)
+  flower:
+    image: mher/flower
+    ports:
+      - "5555:5555"
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+    depends_on:
+      - redis
+    networks:
+      - default_network
+
+volumes:
+  redis_data:
+  postgres_data:
+  qdrant_data:
+
+networks:
+  default_network:
+    driver: bridge

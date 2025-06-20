@@ -90,4 +90,48 @@ bash run_weekly_cleanup.sh
 
 ---
 
+## 🔌 Vector API for Crawler Integration
+
+This project now includes a Vector API service that allows the intelligent-crawler-service to integrate with our vector database without duplicating code.
+
+### Starting the Vector API
+
+```bash
+# Start the Vector API service
+python src/api_main.py
+
+# Or with uvicorn for development
+uvicorn src.api_main:app --reload --host 0.0.0.0 --port 8000
+```
+
+### API Endpoints
+
+- `POST /api/v1/vectors/index` - Index documents from crawler
+- `POST /api/v1/vectors/search` - Search vectorized content
+- `POST /api/v1/vectors/collections` - Create new collections
+- `GET /api/v1/vectors/collections/{name}` - Get collection info
+- `DELETE /api/v1/vectors/documents` - Delete documents
+- `GET /api/v1/vectors/health` - Health check
+
+### Crawler Configuration
+
+Add these to the crawler's `.env`:
+```env
+MAIN_PROJECT_API_URL=http://localhost:8000
+MAIN_PROJECT_API_KEY=your-secure-api-key
+```
+
+### Initialize Crawler Collections
+
+```bash
+# Run this once to create crawler-specific collections
+python scripts/initialize_crawler_collections.py
+```
+
+This creates:
+- `crawled_documents` - For storing crawled web pages
+- `page_summaries` - For AI-generated summaries
+
+---
+
 本项目模块清晰、结构稳定，适合你的 Cursor Agent 理解全流程与未来接入点。

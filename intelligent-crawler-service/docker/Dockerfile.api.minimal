@@ -1,0 +1,26 @@
+# Minimal API Dockerfile for testing
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Install minimal dependencies
+RUN pip install --no-cache-dir \
+    fastapi==0.104.1 \
+    uvicorn[standard]==0.24.0 \
+    pydantic==2.5.0 \
+    pydantic-settings==2.1.0 \
+    aioredis==2.0.1 \
+    asyncpg==0.29.0
+
+# Copy only necessary files
+COPY api/ ./api/
+COPY core/ ./core/
+COPY utils/ ./utils/
+COPY ai/ ./ai/
+COPY crawler/ ./crawler/
+
+# Create empty __init__.py at root
+RUN touch __init__.py
+
+# Run the application
+CMD ["python", "-m", "uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8080", "--reload"]
